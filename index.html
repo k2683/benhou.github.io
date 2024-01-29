@@ -5,6 +5,18 @@
     <title>Bar Chart</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+        .pie-chart, .bar-chart {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            border: 1px solid #000;
+            background-color: #fff;
+            padding: 5px;
+            pointer-events: none;
+        }
         .bar {
             fill: steelblue;
         }
@@ -14,6 +26,7 @@
         .axis-label {
             font: 10px sans-serif;
         }
+
     </style>
 </head>
 <body>
@@ -29,9 +42,16 @@
 <div id="chart9"></div> <!-- 新添加的容器用于第二个图表 -->
 <div id="chart10"></div> <!-- 新添加的容器用于第二个图表 -->
 <div id="chart11"></div> <!-- 新添加的容器用于第二个图表 -->
+<canvas id="pieChart" class="pie-chart" width="400" height="400"></canvas>
+
+<div id="tooltip" class="tooltip"></div>
 
 <script>
     // 模拟的数据集
+  //<div id="tooltip2" class="tooltip"></div>
+
+    ////<canvas id="pieChart2" class="pie-chart" width="400" height="400"></canvas>
+
 const data1 = [
     { alias: "ramranch", vis: 3 },
     { alias: "Caterpillar Fungus", vis: 3 },
@@ -386,6 +406,138 @@ const data11 = aliases.map((alias, index) => ({ alias, git: git[index] }));
     drawBarChart(data9, '#chart9', 'comm');
     drawBarChart(data10, '#chart10', 'collab');
     drawBarChart(data11, '#chart11', 'git');
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  var canvas = document.getElementById('pieChart');
+  var ctx = canvas.getContext('2d');
+  var tooltip = document.getElementById('tooltip');
+
+ var data = [
+    { name: 'Sport', value: 10, color: '#FF0000', text: 'tjsol,gallopinto,sackboy,kattmat,stellarise,Frieren,Mintchoco' },
+    { name: 'Art', value: 7, color: '#00FF00', text: 'ramranch, Caterpillar Fungus,Kakka,stellarise,numpy,DiscoTechLola,Sam Vimes' },
+    { name: 'Coding', value: 7, color: '#0000FF', text: 'tjsol,Rookie9,matcha,Flower,Beowulf,Croco,SargeSmoke,Shadowheart,Ty29,John Wick' },
+    { name: 'Others', value: 20, color: '#FFFF00', text: 'Weissach, BirdMaster, kapybara, Bebocchia, BlenderBender, Windy65, Bond, Jan Bond, MGH552200, YellowShyGuy, Reisen, DrPavel, SannyKuro, Aaron, GGer' }
+  ];
+  
+  var totalValue = data.reduce((acc, item) => acc + item.value, 0);
+  var startAngle = 0;
+
+  data.forEach(item => {
+    var sliceAngle = (item.value / totalValue) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.fillStyle = item.color;
+    ctx.moveTo(200, 200); // Center of the pie chart
+    ctx.arc(200, 200, 100, startAngle, startAngle + sliceAngle);
+    ctx.closePath();
+    ctx.fill();    // 计算文本位置和绘制文本
+    var textAngle = startAngle + (sliceAngle / 2); // 扇形的中间角度
+    var textX = 200 + Math.cos(textAngle) * 70; // 调整70来设置文本在扇形内部的偏移量
+    var textY = 200 + Math.sin(textAngle) * 70;
+    ctx.fillStyle = "black"; // 文本颜色
+    ctx.font = "14px Arial"; // 文本样式
+    ctx.textAlign = "center"; // 文本居中
+    ctx.fillText(item.name, textX, textY); // 绘制文本
+    startAngle += sliceAngle;
+  });
+
+canvas.addEventListener('mousemove', function(e) {
+  var rect = canvas.getBoundingClientRect();
+  var mouseX = e.clientX - rect.left;
+  var mouseY = e.clientY - rect.top;
+  var centerX = canvas.width / 2;
+  var centerY = canvas.height / 2;
+  var distanceFromCenter = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
+
+  if (distanceFromCenter <= 100) { // 判断鼠标是否在扇形图内部
+    var angle = Math.atan2(mouseY - centerY, mouseX - centerX);
+    if (angle < 0) angle += 2 * Math.PI; // 转换为0到2π之间的角度
+
+    var totalAngle = 0;
+    for (var i = 0; i < data.length; i++) {
+      var sliceAngle = (data[i].value / totalValue) * 2 * Math.PI;
+      if (angle >= totalAngle && angle < totalAngle + sliceAngle) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 15) + 'px';
+        tooltip.style.top = (e.clientY + 15) + 'px';
+        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 显示当前扇形部分的名称和值
+        break;
+      }
+      totalAngle += sliceAngle;
+    }
+  }
+  else {
+    tooltip.style.display = 'none';
+  }
+  
+  
+});
+/*
+var canvas2 = document.getElementById('pieChart2');
+  var ctx2 = canvas2.getContext('2d');
+  var tooltip2 = document.getElementById('tooltip2');
+
+ var data2 = [
+    { name: 'Master', value: 39, color: '#FF0000', text: 'ramranch, Caterpillar Fungus, tjsol, Rookie9, Flower, kapybara, Bebocchia, stellarise, Kakka, Beowulf, BirdMaster, Weissach, Croco,  kattmat, gallopinto, numpy, Kanelbulle, sackboy, blackcat, Shadowheart, ghostcat, cyan, BlenderBender, Windy65, Bond, Jan Bond, MGH552200, John Wick, YellowShyGuy, Sam Vimes, Frieren, DiscoTechLola, Aaron, GGer, Reisen, DrPavel, SannyKuro, Mintchoco, Ty29' },
+    { name: 'Bachelor', value: 5, color: '#00FF00', text: 'matcha, SargeSmoke，w,tpain,tofu' },
+
+  ];
+  
+  var totalValue = data2.reduce((acc, item) => acc + item.value, 0);
+  var startAngle = 0;
+
+  data2.forEach(item => {
+    var sliceAngle = (item.value / totalValue) * 2 * Math.PI;
+    ctx2.beginPath();
+    ctx2.fillStyle = item.color;
+    ctx2.moveTo(200, 200); // Center of the pie chart
+    ctx2.arc(200, 200, 100, startAngle, startAngle + sliceAngle);
+    ctx2.closePath();
+    ctx2.fill();    // 计算文本位置和绘制文本
+    var textAngle = startAngle + (sliceAngle / 2); // 扇形的中间角度
+    var textX = 200 + Math.cos(textAngle) * 70; // 调整70来设置文本在扇形内部的偏移量
+    var textY = 200 + Math.sin(textAngle) * 70;
+    ctx2.fillStyle = "black"; // 文本颜色
+    ctx2.font = "14px Arial"; // 文本样式
+    ctx2.textAlign = "center"; // 文本居中
+    ctx2.fillText(item.name, textX, textY); // 绘制文本
+    startAngle += sliceAngle;
+  });
+
+canvas2.addEventListener('mousemove', function(e) {
+  var rect = canvas2.getBoundingClientRect();
+  var mouseX = e.clientX - rect.left;
+  var mouseY = e.clientY - rect.top;
+  var centerX = canvas2.width / 2;
+  var centerY = canvas2.height / 2;
+  var distanceFromCenter = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
+
+  if (distanceFromCenter <= 100) { // 判断鼠标是否在扇形图内部
+    var angle = Math.atan2(mouseY - centerY, mouseX - centerX);
+    if (angle < 0) angle += 2 * Math.PI; // 转换为0到2π之间的角度
+
+    var totalAngle = 0;
+    for (var i = 0; i < data.length; i++) {
+      var sliceAngle = (data[i].value / totalValue) * 2 * Math.PI;
+      if (angle >= totalAngle && angle < totalAngle + sliceAngle) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 15) + 'px';
+        tooltip.style.top = (e.clientY + 15) + 'px';
+        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 显示当前扇形部分的名称和值
+        break;
+      }
+      totalAngle += sliceAngle;
+    }
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+*/
+
+});
+
+
 
 function drawBarChart(data, chartId, valueKey) {
         // 设置 SVG 尺寸和边距
