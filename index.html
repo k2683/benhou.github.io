@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IVIS Project 1 Benhou Li</title>
+    <title>Bar Chart</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         .pie-chart, .bar-chart {
@@ -37,6 +37,20 @@
             font-size: 18px;
         }
 
+        #myTable {
+    width: 100%; /* 表格宽度 */
+    border-collapse: collapse; /* 边框合并 */
+}
+
+#myTable th, #myTable td {
+    border: 1px solid black; /* 单元格边框 */
+    padding: 8px; /* 单元格内边距 */
+    text-align: left; /* 文本对齐方式 */
+}
+
+#myTable th {
+    background-color: #f2f2f2; /* 表头背景色 */
+}
 
     </style>
 </head>
@@ -60,6 +74,20 @@
 <div id="chartTitle" class="chart-title">title</div> 
 <button id="myButton">More Detailed Infomation</button>
 <div id="displayText"></div>
+
+
+<table id="myTable" border="1">
+    <tr>
+        <th>gourp1</th>
+        <th>gourp2</th>
+        <th>gourp3</th>
+        <th>gourp4</th>
+        <th>gourp5</th>
+        <th>gourp6</th>
+        <th>gourp7</th>
+        <th>gourp8</th>
+    </tr>
+</table>
 
 
 <script>
@@ -564,6 +592,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// JavaScript代码
+document.addEventListener('DOMContentLoaded', function() {
+    // 定义各组成员
+    var groups = [
+        ["Frieren", "ramranch", "Flower", "BlenderBender", "Reisen", "Rookie9"],
+        ["BirdMaster", "Bebocchia", "stellarise", "Beowulf", "Mintchoco", "ghostcat"],
+        ["Kakka", "tjsol", "sackboy", "w", "GGer", "YellowShyGuy"],
+        ["matcha", "Shadowheart", "numpy", "Ty29", "SargeSmoke"],
+        ["Caterpillar Fungus", "MGH552200", "Sam Vimes", "DiscoTechLola", "Bond, Jan Bond"],
+        ["tpain", "kattmat", "Aaron", "John Wick", "DrPavel"],
+        ["tofu", "Croco", "blackcat", "Windy65", "Weissach"],
+        ["kapybara", "SannyKuro", "Kanelbulle", "gallopinto", "cyan"]
+    ];
+
+    var table = document.getElementById('myTable'); // 获取表格
+
+    // 确保最多的行数足以容纳最大的组
+    var maxRows = groups.reduce((max, group) => Math.max(max, group.length), 0);
+
+    // 为每一行创建<tr>和<td>
+    for (var i = 0; i < maxRows; i++) {
+        var row = table.insertRow(-1); // 在表格末尾插入一行
+        for (var j = 0; j < groups.length; j++) {
+            var cell = row.insertCell(-1); // 在当前行末尾插入一个单元格
+            cell.textContent = groups[j][i] || ''; // 如果当前组在这一行有成员，则填入成员名称，否则为空字符串
+        }
+    }
+});
 
 
 function drawBarChart(data, chartId, valueKey) {
