@@ -26,31 +26,43 @@
         .axis-label {
             font: 10px sans-serif;
         }
+        #myButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 10px; 
+        }
+        #displayText {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
 
     </style>
 </head>
 <body>
 
-<div id="chart1"></div> <!-- 容器用于第一个图表 -->
-<div id="chart2"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart3"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart4"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart5"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart6"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart7"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart8"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart9"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart10"></div> <!-- 新添加的容器用于第二个图表 -->
-<div id="chart11"></div> <!-- 新添加的容器用于第二个图表 -->
+<div id="chart1"></div> 
+<div id="chart2"></div> 
+<div id="chart3"></div> 
+<div id="chart4"></div> 
+<div id="chart5"></div> 
+<div id="chart6"></div> 
+<div id="chart7"></div> 
+<div id="chart8"></div> 
+<div id="chart9"></div> 
+<div id="chart10"></div> 
+<div id="chart11"></div> 
 <canvas id="pieChart" class="pie-chart" width="400" height="400"></canvas>
-
+<canvas id="pieChart2" class="pie-chart" width="400" height="400"></canvas>
 <div id="tooltip" class="tooltip"></div>
+<div id="tooltip2" class="tooltip"></div>
+<div id="chartTitle" class="chart-title">title</div> 
+<button id="myButton">More Detailed Infomation</button>
+<div id="displayText"></div>
+
 
 <script>
-    // 模拟的数据集
-  //<div id="tooltip2" class="tooltip"></div>
-
-    ////<canvas id="pieChart2" class="pie-chart" width="400" height="400"></canvas>
 
 const data1 = [
     { alias: "ramranch", vis: 3 },
@@ -394,8 +406,6 @@ const data10 = aliases.map((alias, index) => ({ alias, collab: collab[index] }))
 const data11 = aliases.map((alias, index) => ({ alias, git: git[index] }));
 
     drawBarChart(data1, '#chart1', 'vis');
-
-    // 绘制第二个图表
     drawBarChart(data2, '#chart2', 'math');
     drawBarChart(data3, '#chart3', 'art');
     drawBarChart(data4, '#chart4', 'ui');
@@ -413,7 +423,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var canvas = document.getElementById('pieChart');
   var ctx = canvas.getContext('2d');
   var tooltip = document.getElementById('tooltip');
-
+  var chartTitle = document.getElementById('chartTitle');
+    chartTitle.innerHTML = 'Interests and Degrees Pie Chart';
  var data = [
     { name: 'Sport', value: 10, color: '#FF0000', text: 'tjsol,gallopinto,sackboy,kattmat,stellarise,Frieren,Mintchoco' },
     { name: 'Art', value: 7, color: '#00FF00', text: 'ramranch, Caterpillar Fungus,Kakka,stellarise,numpy,DiscoTechLola,Sam Vimes' },
@@ -431,14 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.moveTo(200, 200); // Center of the pie chart
     ctx.arc(200, 200, 100, startAngle, startAngle + sliceAngle);
     ctx.closePath();
-    ctx.fill();    // 计算文本位置和绘制文本
-    var textAngle = startAngle + (sliceAngle / 2); // 扇形的中间角度
-    var textX = 200 + Math.cos(textAngle) * 70; // 调整70来设置文本在扇形内部的偏移量
+    ctx.fill();    // 
+    var textAngle = startAngle + (sliceAngle / 2); // 
+    var textX = 200 + Math.cos(textAngle) * 70; // 
     var textY = 200 + Math.sin(textAngle) * 70;
-    ctx.fillStyle = "black"; // 文本颜色
-    ctx.font = "14px Arial"; // 文本样式
-    ctx.textAlign = "center"; // 文本居中
-    ctx.fillText(item.name, textX, textY); // 绘制文本
+    ctx.fillStyle = "black"; // 
+    ctx.font = "14px Arial"; // 
+    ctx.textAlign = "center"; // 
+    ctx.fillText(item.name, textX, textY); // 
     startAngle += sliceAngle;
   });
 
@@ -450,9 +461,9 @@ canvas.addEventListener('mousemove', function(e) {
   var centerY = canvas.height / 2;
   var distanceFromCenter = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
 
-  if (distanceFromCenter <= 100) { // 判断鼠标是否在扇形图内部
+  if (distanceFromCenter <= 100) { // 
     var angle = Math.atan2(mouseY - centerY, mouseX - centerX);
-    if (angle < 0) angle += 2 * Math.PI; // 转换为0到2π之间的角度
+    if (angle < 0) angle += 2 * Math.PI; // 
 
     var totalAngle = 0;
     for (var i = 0; i < data.length; i++) {
@@ -461,7 +472,7 @@ canvas.addEventListener('mousemove', function(e) {
         tooltip.style.display = 'block';
         tooltip.style.left = (e.clientX + 15) + 'px';
         tooltip.style.top = (e.clientY + 15) + 'px';
-        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 显示当前扇形部分的名称和值
+        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 
         break;
       }
       totalAngle += sliceAngle;
@@ -473,7 +484,7 @@ canvas.addEventListener('mousemove', function(e) {
   
   
 });
-/*
+
 var canvas2 = document.getElementById('pieChart2');
   var ctx2 = canvas2.getContext('2d');
   var tooltip2 = document.getElementById('tooltip2');
@@ -494,14 +505,14 @@ var canvas2 = document.getElementById('pieChart2');
     ctx2.moveTo(200, 200); // Center of the pie chart
     ctx2.arc(200, 200, 100, startAngle, startAngle + sliceAngle);
     ctx2.closePath();
-    ctx2.fill();    // 计算文本位置和绘制文本
-    var textAngle = startAngle + (sliceAngle / 2); // 扇形的中间角度
-    var textX = 200 + Math.cos(textAngle) * 70; // 调整70来设置文本在扇形内部的偏移量
+    ctx2.fill();    // 
+    var textAngle = startAngle + (sliceAngle / 2); // 
+    var textX = 200 + Math.cos(textAngle) * 70; // 
     var textY = 200 + Math.sin(textAngle) * 70;
-    ctx2.fillStyle = "black"; // 文本颜色
-    ctx2.font = "14px Arial"; // 文本样式
-    ctx2.textAlign = "center"; // 文本居中
-    ctx2.fillText(item.name, textX, textY); // 绘制文本
+    ctx2.fillStyle = "black"; // 
+    ctx2.font = "14px Arial"; // 
+    ctx2.textAlign = "center"; // 
+    ctx2.fillText(item.name, textX, textY); // 
     startAngle += sliceAngle;
   });
 
@@ -513,9 +524,9 @@ canvas2.addEventListener('mousemove', function(e) {
   var centerY = canvas2.height / 2;
   var distanceFromCenter = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
 
-  if (distanceFromCenter <= 100) { // 判断鼠标是否在扇形图内部
+  if (distanceFromCenter <= 100) { // 
     var angle = Math.atan2(mouseY - centerY, mouseX - centerX);
-    if (angle < 0) angle += 2 * Math.PI; // 转换为0到2π之间的角度
+    if (angle < 0) angle += 2 * Math.PI; // 
 
     var totalAngle = 0;
     for (var i = 0; i < data.length; i++) {
@@ -524,7 +535,7 @@ canvas2.addEventListener('mousemove', function(e) {
         tooltip.style.display = 'block';
         tooltip.style.left = (e.clientX + 15) + 'px';
         tooltip.style.top = (e.clientY + 15) + 'px';
-        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 显示当前扇形部分的名称和值
+        tooltip.innerHTML = data[i].name + ": " + data[i].text; // 
         break;
       }
       totalAngle += sliceAngle;
@@ -533,45 +544,56 @@ canvas2.addEventListener('mousemove', function(e) {
     tooltip.style.display = 'none';
   }
 });
-*/
 
+
+});
+document.addEventListener('DOMContentLoaded', function() {
+    var button = document.getElementById('myButton');
+    var displayText = document.getElementById('displayText');
+
+    button.addEventListener('click', function() {
+        // 
+        if (displayText.style.display === 'none' || displayText.style.display === '') {
+            displayText.style.display = 'block'; // 
+            displayText.innerHTML = 'People who enjoy sports include tjsol, gallopinto, sackboy, kattmat, stellarise, Frieren, Mintchoco.<br>People who enjoy art include ramranch, Caterpillar Fungus,Kakka,stellarise,numpy,DiscoTechLola,Sam Vimes.<br>People who enjoy coding include tjsol,Rookie9,matcha,Flower,Beowulf,Croco,SargeSmoke,Shadowheart,Ty29,John Wick<br>People who enjoy other stuff include Weissach, BirdMaster, kapybara, Bebocchia, BlenderBender, Windy65, Bond, Jan Bond, MGH552200, YellowShyGuy, Reisen, DrPavel, SannyKuro, Aaron, GGer.<br>Bachelor students include matcha, SargeSmoke,w,tpain,tofu<br>Master students include ramranch, Caterpillar Fungus, tjsol, Rookie9, Flower, kapybara, Bebocchia, stellarise, Kakka, Beowulf, BirdMaster, Weissach, Croco,  kattmat, gallopinto, numpy, Kanelbulle, sackboy, blackcat, Shadowheart, ghostcat, cyan, BlenderBender, Windy65, Bond, Jan Bond, MGH552200, John Wick, YellowShyGuy, Sam Vimes, Frieren, DiscoTechLola, Aaron, GGer, Reisen, DrPavel, SannyKuro, Mintchoco, Ty29';
+
+
+        } else {
+            displayText.style.display = 'none'; // 
+        }
+    });
 });
 
 
 
 function drawBarChart(data, chartId, valueKey) {
-        // 设置 SVG 尺寸和边距
+    
         const margin = {top: 20, right: 30, bottom: 60, left: 90},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        // 创建 x 比例尺
         const x = d3.scaleLinear()
             .domain([0, d3.max(data, d => d[valueKey])])
             .range([0, width]);
 
-        // 创建 y 比例尺
         const y = d3.scaleBand()
             .domain(data.map(d => d.alias))
             .range([height, 0])
             .padding(0.1);
 
-        // 创建 SVG 容器
         const svg = d3.select(chartId).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
           .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        //添加图表标题
-        svg.append("text")
+            svg.append("text")
             .attr("x", (width / 2))
             .attr("y", height + (margin.bottom / 2))
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
             .text(`The Correspondence between Alias and ${valueKey.toUpperCase()}`);
 
-        // 创建柱状图的矩形
         svg.selectAll(".bar")
             .data(data)
           .enter().append("rect")
@@ -581,11 +603,9 @@ function drawBarChart(data, chartId, valueKey) {
             .attr("x", 0)
             .attr("width", d => x(d[valueKey]));
 
-        // 添加 y 轴
         svg.append("g")
             .call(d3.axisLeft(y));
 
-        // 添加 x 轴
         svg.append("g")
             .attr("transform", `translate(0,${height})`)
             .call(d3.axisBottom(x));
